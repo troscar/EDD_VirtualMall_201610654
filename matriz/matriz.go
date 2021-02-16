@@ -134,12 +134,27 @@ func (m *matriz) NoExisten(product *Product, x int, y int) {
 }
 
 func (m *matriz) ExisteVertical(product *Product, x int, y int) {
-	
+	m.ls_h.Insert(x) //insertamos en la lista que emula lacabecera horizontal
+
+	h:= m.ls_h.Busqueda(x) // vamos a buscar el nodo que acabamos de insertar para poder enlazar
+	v:= m.lst_v.Busqueda(y) // vamos a buscar el nodo que ya existe en vertical para poder enlazar
+
+	nuevo := nodoMatriz(x,y,product) // creamos nuevo nodo tipo matriz
+
+	// verificamos en que posicion insertaremos el nuevo nodo
+
+
+	h.abajo = nuevo	//enlazamos el nodo horizontal hacia abajo
+	nuevo.arriba = h // enlazamos el nodo nuevo hacia arriba
+
+	v.derecho = nuevo //enlazamos el nodo vertical hacia la derecha
+	nuevo.izquierdo = v // enlazamos el nuevo nodo hacia la izquierda
+
 }
 
 func (m *matriz) ExisteHorizontal(product *Product, x int, y int) {
-	
 }
+
 
 func (m *matriz) Existen(product *Product, x int, y int) {
 	
