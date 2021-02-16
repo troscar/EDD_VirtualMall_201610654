@@ -6,7 +6,8 @@ import (
 
 type nodo struct {
 	siguiente, anterior *nodo
-	dato string
+	calificacion int
+	nombre , descripcion, telefono string
 }
 
 type Lst struct {
@@ -18,8 +19,8 @@ func NewLst() *Lst {
 	return &Lst{nil,nil,0}
 }
 
-func (m *Lst)Insert(entrada string) int {
-	nuevo := &nodo{nil,nil,entrada}
+func (m *Lst)Insert(cali int,nom string,desc string, tel string) int {
+	nuevo := &nodo{nil,nil,cali,nom,desc,tel}
 	if m.raiz==nil {
 		m.raiz = nuevo
 		m.ultimo = nuevo
@@ -36,9 +37,8 @@ func (m *Lst)Print()  {
 	aux := m.raiz
 	contador := 0
 	for(aux != nil){
-		fmt.Println(aux.dato)
+		fmt.Println(aux.nombre)
 		aux = aux.siguiente
 		contador++;
 	}
-	//fmt.Println("Valores en lista:",m.size,"Nodos impresos:", contador)
 }

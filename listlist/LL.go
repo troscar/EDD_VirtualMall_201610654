@@ -4,7 +4,14 @@ import (
 	"../lista"
 	"fmt"
 )
-
+//prueba en main
+//ll := listadelistas.NewLL()
+//ll.Insert(1,"")
+//ll.Insert(2,"")
+//ll.Insert(3,"")
+//ll.Insert(4,"")
+//ll.Insert(5,"")
+//ll.Print()
 
 
 type nodo struct {
@@ -27,22 +34,22 @@ func NewLL() *LL {
 }
 
 
-func (ll *LL) Insert(index int, dato string)  {
+func (ll *LL) Insert(index int,cali int,nom string,desc string, tel string)  {
 	nuevo := newNodo(index)
 	if ll.raiz == nil{
 		ll.raiz = nuevo
 		ll.ultimo = nuevo
-		nuevo.lst.Insert(dato)
+		nuevo.lst.Insert(cali ,nom ,desc , tel )
 	}else{
 		aux := ll.raiz
 		for(aux!=nil){
 			if aux.index==index{
-				aux.lst.Insert(dato)
+				aux.lst.Insert(cali ,nom ,desc , tel )
 				return
 			}
 			aux = aux.siguiente
 		}
-		nuevo.lst.Insert(dato)
+		nuevo.lst.Insert(cali ,nom ,desc , tel )
 		ll.ultimo.siguiente = nuevo
 		nuevo.anterior= ll.ultimo
 		ll.ultimo = nuevo
@@ -54,7 +61,7 @@ func (ll *LL) Insert(index int, dato string)  {
 func (ll *LL) Print(){
 	aux := ll.raiz
 	for aux!= nil {
-		fmt.Println("--------Index:", aux.index, "---------")
+		fmt.Println("--------lista:", aux.index, "---------")
 		aux.lst.Print()
 		aux = aux.siguiente
 	}
