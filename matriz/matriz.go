@@ -1,161 +1,207 @@
 package matriz
 
 import "fmt"
+import "../listlist"
 
-type Product struct {
-	nombre string
-	codigo int
-	descripcion string
+type NodoM struct {
+	ll * listadelistas.LL
+	siguiente, anterior, arriba, abajo *NodoM
+	letra, categoria string
+}
+func NewNodom(l, cate string) *NodoM {
+	return &NodoM{listadelistas.NewLL(), nil, nil,nil,nil,l,cate}
+}
+type Matriz struct {
+	raiz *NodoM
+
 }
 
-type nodo struct {
-	//estos atributos son especificos para la matriz
-	x, y     int      //saber en que cabecera estoy
-	producto *Product //tipo de objeto
-	izquierdo, derecho , arriba , abajo *nodo //nodos con los que nos deplazamos dentro de la matriz
-	//ESTOS ATRIBUTOS SON ESPECIFICOS PARA LA LISTA
-	header int // tipo interno de a cabecera
-	siguiente, anterior *nodo // nodos con los qe vamos a desplazarnos dentro de las listas
+func NewMatriz() *Matriz {
+	return &Matriz{NewNodom("raiz","raiz")}
 }
 
-type matriz struct {
-	ls_h, lst_v *Lista
+func (m *Matriz) Buscar_letra(l string) *NodoM{
+	aux := m.raiz.siguiente
+	for aux!=nil{
+		if aux.letra == l {
+			return aux
+		}
+		aux = aux.siguiente
+	}
+	return nil
 }
 
-func nodoMatriz (x int ,y int,producto *Product) *nodo {
-	return &nodo{x,y,producto,nil,nil,nil,nil,nil,nil,nil}
+func (m *Matriz) Insertar_letra(l string) {
+	aux := m.raiz.siguiente
+	aux2:= m.raiz
+	nuevo := NewNodom(l,"")
+	for aux!=nil{
+		if aux.letra > l{
+			nuevo.siguiente = aux
+			aux2.siguiente = nuevo
+			aux.anterior  = nuevo
+			nuevo.anterior = aux2
+			break
+		}
+		aux = aux.siguiente
+		aux2 = aux2.siguiente
+	}
+	if aux == nil{
+		nuevo.anterior=aux2
+		aux2.siguiente = nuevo
+	}
 }
 
-type Lista struct {
-	first, last *nodo
+func (m *Matriz) Buscar_categoria(c string) *NodoM{
+	aux := m.raiz
+	aux = aux.abajo
+	for aux!=nil{
+		if aux.categoria == c{
+			return aux
+		}
+		aux = aux.abajo
+	}
+	return nil
 }
 
-func nodoLista(header int) *nodo {
-	return &nodo{nil,nil,nil,nil,nil,nil,nil,header,nil,nil}
+func (m *Matriz) Insertar_categoria(cat string) {
+	aux := m.raiz.abajo
+	aux2:= m.raiz
+	nuevo := NewNodom("",cat)
+	for aux!=nil{
+		if aux.categoria > cat{
+			nuevo.abajo = aux
+			aux2.abajo = nuevo
+			aux.arriba  = nuevo
+			nuevo.arriba = aux2
+			break
+		}
+		aux = aux.abajo
+		aux2 = aux2.abajo
+	}
+	if aux == nil{
+		nuevo.arriba=aux2
+		aux2.abajo = nuevo
+	}
 }
 
-func newLista() *Lista {
-	return &Lista{nil,nil}
+func (m *Matriz) Insert(let string, ria string){
+	nuevoC := m.Buscar_categoria(ria)
+	nuevoL := m.Buscar_letra(let)
+	nuevo := NewNodom(let,ria)
+	//fmt.Println(m.Buscar_letra(let))
+	//fmt.Println(m.Buscar_categoria(ria))
+	if nuevoL==nil && nuevoC==nil {
+		//fmt.Println("entra")
+		m.Insertar_categoria(ria)
+		m.Insertar_letra(let)
+		nuevoC = m.Buscar_categoria(ria)
+		nuevoL = m.Buscar_letra(let)
+		nuevo.arriba = nuevoL
+		nuevo.anterior = nuevoC
+		nuevoL.abajo = nuevo
+		nuevoC.siguiente = nuevo
+	}else if nuevoL!=nil && nuevoC==nil{
+		m.Insertar_categoria(ria)
+		m.Insertar_nodo_letra(let,ria,nuevo)
+	}else if nuevoL==nil && nuevoC!=nil{
+		m.Insertar_letra(let)
+		m.Insertar_nodo_categoria(let,ria,nuevo)
+	}
+
+/*
+	//temporal := m.raiz
+	//INSERTA SI LA MATRIZ ESTA VACIA
+	//
+	//	m.raiz.siguiente = nuevoL
+	//	nuevoL.anterior = m.raiz
+	//	m.raiz.abajo = nuevoC
+	//	nuevoC.arriba = m.raiz
+	//	nuevoL.abajo = nuevo
+	//	nuevoC.siguiente = nuevo
+	//}
+	//fmt.Println(m.Buscar_letra(let))
+	//fmt.Println(m.Buscar_categoria(ria))
+*/
+
 }
-func newMatriz() *matriz {
-	return &matriz{newLista(),newLista()}
-}
-
-func (n *nodo) headerX()  int {return n.x}
-
-func (n *nodo) headerY()  int {return n.y}
-
-func (n *nodo) tostring()  string {return "Noombre: "+n.producto.nombre +"\n Descripcion: "+n.producto.descripcion}
-
-var lista = &Lista{nil,nil}
-
-func (l *Lista) Ordenar(nuevo *nodo)  {
-	aux := l.first
-	for (aux != nil){
-		if nuevo.header > aux.header{
-			aux = aux.siguiente
+func (m *Matriz) Print(){
+	aux1 := m.raiz
+	aux2 := m.raiz
+	for aux2!= nil {
+		fmt.Print( aux1.letra, "/",aux1.categoria,"-----------")
+		if aux1.siguiente!=nil {
+			aux1 = aux1.siguiente
 		}else{
-			if aux == l.first{
-				nuevo .siguiente = aux
-				aux.anterior = nuevo
-				l.first = nuevo
-			}else{
-				nuevo.anterior = aux.anterior
-				aux.anterior.siguiente = nuevo
-				nuevo.siguiente  = aux
-				aux.anterior = nuevo
-			}
-			return
+			aux2 = aux2.abajo
+			aux1 = aux2
+			fmt.Println(" ")
 		}
 	}
-	l.last.siguiente =nuevo
-	nuevo.anterior = l.last
-	l.last = nuevo
-}
-func (l *Lista) Insert(header int)  {
-	nuevo := nodoLista(header)
-	if l.first == nil{
-		l.first = nuevo
-		l.last = nuevo
-	}else{
-		l.Ordenar(nuevo)
-	}
-
-}
-
-func (l * Lista) Busqueda(header int) *nodo  {
-	temp := l.first
-	for temp != nil{
-		if temp.header == header{
-			return temp
+	fmt.Println("----------------------------------------------------------------------")
+	aux1 = m.raiz
+	aux2 = m.raiz
+	for aux2!= nil {
+		fmt.Print( aux1.letra, "/",aux1.categoria,"-----------")
+		if aux1.abajo!=nil {
+			aux1 = aux1.abajo
+		}else{
+			aux2 = aux2.siguiente
+			aux1 = aux2
+			fmt.Println(" ")
 		}
-		temp = temp.siguiente
-	}
-	return  nil
-}
-
-func (l *Lista) Print()  {
-	temp := l.first
-	for temp != nil{
-		fmt.Println("Cabecera: ",temp.header)
-		temp = temp.siguiente
 	}
 }
 
-func (m *matriz) Insert(product *Product,x int,y int)  {
-	h := m.ls_h.Busqueda(x)
-	v:= m.lst_v.Busqueda(y)
+func (m *Matriz) Insertar_nodo_letra(let string,cate string,nuevo *NodoM)  {
+	catego := m.Buscar_categoria(cate)
+	aux := m.Buscar_letra(let)
+	aux2 := aux
+	aux = aux.abajo
+	for aux!=nil{
+		if aux.categoria > cate{
+			nuevo.abajo = aux
+			aux2.abajo = nuevo
+			aux.arriba  = nuevo
+			nuevo.arriba = aux2
+			catego.siguiente = nuevo
+			nuevo.anterior = catego
+			break
+		}
+		aux = aux.abajo
+		aux2 = aux2.abajo
+	}
+	if aux == nil{
+		nuevo.arriba=aux2
+		aux2.abajo = nuevo
+		catego.siguiente = nuevo
+		nuevo.anterior = catego
 
-	if h==nil && v==nil{
-		m.NoExisten(product,x,y)
-	}else if h==nil && v !=nil{
-		m.ExisteVertical(product,x,y)
-	}else if h!=nil && v==nil{
-		m.ExisteHorizontal(product,x,y)
-	}else if h!= nil && v!= nil{
-		m.Existen(product,x,y)
 	}
 }
 
-func (m *matriz) NoExisten(product *Product, x int, y int) {
-	m.ls_h.Insert(x) //insertamos en la lista que emula lacabecera horizontal
-	m.lst_v.Insert(y) //insertamos en la lista que emula lacabecera vertical
-
-	h:= m.ls_h.Busqueda(x) // vamos a buscar el nodo que acabamos de insertar para poder enlazar
-	v:= m.lst_v.Busqueda(y) // vamos a buscar el nodo que acabamos de insertar para poder enlazar
-
-	nuevo := nodoMatriz(x,y,product) // creamos nuevo nodo tipo matriz
-
-	h.abajo = nuevo	//enlazamos el nodo horizontal hacia abajo
-	nuevo.arriba = h // enlazamos el nodo nuevo hacia arriba
-
-	v.derecho = nuevo //enlazamos el nodo vertical hacia la derecha
-	nuevo.izquierdo = v // enlazamos el nuevo nodo hacia la izquierda
-}
-
-func (m *matriz) ExisteVertical(product *Product, x int, y int) {
-	m.ls_h.Insert(x) //insertamos en la lista que emula lacabecera horizontal
-
-	h:= m.ls_h.Busqueda(x) // vamos a buscar el nodo que acabamos de insertar para poder enlazar
-	v:= m.lst_v.Busqueda(y) // vamos a buscar el nodo que ya existe en vertical para poder enlazar
-
-	nuevo := nodoMatriz(x,y,product) // creamos nuevo nodo tipo matriz
-
-	// verificamos en que posicion insertaremos el nuevo nodo
-
-
-	h.abajo = nuevo	//enlazamos el nodo horizontal hacia abajo
-	nuevo.arriba = h // enlazamos el nodo nuevo hacia arriba
-
-	v.derecho = nuevo //enlazamos el nodo vertical hacia la derecha
-	nuevo.izquierdo = v // enlazamos el nuevo nodo hacia la izquierda
-
-}
-
-func (m *matriz) ExisteHorizontal(product *Product, x int, y int) {
-}
-
-
-func (m *matriz) Existen(product *Product, x int, y int) {
-	
+func (m *Matriz) Insertar_nodo_categoria(let string, ria string, nuevo *NodoM) {
+	letra := m.Buscar_letra(let)
+	aux := m.Buscar_categoria(ria)
+	aux2:= aux
+	aux = aux.siguiente
+	for aux!= nil{
+		if aux.letra > let{
+			nuevo.siguiente = aux
+			aux2.siguiente = nuevo
+			aux.anterior = nuevo
+			nuevo.anterior = aux2
+			letra.abajo = nuevo
+			nuevo.arriba = letra
+			break
+		}
+		aux = aux.siguiente
+		aux2 = aux2.siguiente
+	}
+	if aux == nil {
+		nuevo.anterior = aux2
+		aux2.siguiente = nuevo
+		letra.abajo = nuevo
+		nuevo.arriba = letra
+	}
 }
