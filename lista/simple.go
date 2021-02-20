@@ -4,14 +4,14 @@ import (
 	"fmt"
 )
 
-type nodo struct {
-	siguiente, anterior *nodo
+type nodoL struct {
+	siguiente, anterior *nodoL
 	calificacion int
 	nombre , descripcion, telefono string
 }
 
 type Lst struct {
-	raiz, ultimo *nodo
+	raiz, ultimo *nodoL
 	size int
 }
 
@@ -20,7 +20,7 @@ func NewLst() *Lst {
 }
 
 func (m *Lst)Insert(cali int,nom string,desc string, tel string) int {
-	nuevo := &nodo{nil,nil,cali,nom,desc,tel}
+	nuevo := &nodoL{nil,nil,cali,nom,desc,tel}
 	if m.raiz==nil {
 		m.raiz = nuevo
 		m.ultimo = nuevo
@@ -41,4 +41,13 @@ func (m *Lst)Print()  {
 		aux = aux.siguiente
 		contador++;
 	}
+}
+
+func (m *Lst) Devuelve_nodo_lista(index int) *nodoL {
+	aux := m.raiz
+	for(aux != nil){
+		return aux
+		aux = aux.siguiente
+	}
+	return nil
 }

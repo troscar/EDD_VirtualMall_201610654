@@ -1,18 +1,34 @@
 package matriz
 
-import "fmt"
-import "../listlist"
+import (
+	"../listlist"
+	"fmt"
+	"os"
+)
 
 type NodoM struct {
 	ll * listadelistas.LL
 	siguiente, anterior, arriba, abajo *NodoM
 	letra, categoria string
 }
-func NewNodom(l, cate string) *NodoM {
-	return &NodoM{listadelistas.NewLL(), nil, nil,nil,nil,l,cate}
-}
+
 type Matriz struct {
 	raiz *NodoM
+
+}
+
+func NewNodom(l, cate string) *NodoM {
+	return &NodoM{/*listadelistas.NewLL()*/iniciar_lista(), nil, nil,nil,nil,l,cate}
+}
+
+func iniciar_lista() *listadelistas.LL  {
+	ll := listadelistas.NewLL()
+	ll.Insert(1,1,"","","")
+	ll.Insert(2,2,"","","")
+	ll.Insert(3,3,"","","")
+	ll.Insert(4,4,"","","")
+	ll.Insert(5,5,"","","")
+	return ll
 
 }
 
@@ -108,33 +124,17 @@ func (m *Matriz) Insert(let string, ria string){
 		m.Insertar_letra(let)
 		m.Insertar_nodo_categoria(let,ria,nuevo)
 	}else if nuevoL!=nil && nuevoC!=nil{
-		existe := m.buscar_Nodo(let, ria)
+		existe := m.Buscar_Nodo(let, ria)
 		if existe== nil {
-			fmt.Println("no existe")
+			//fmt.Println("no existe")
 			m.Insertar_letra_categoria(let,ria,nuevo)
 		}else{
-			fmt.Println("ya existe")
+			//fmt.Println("ya existe")
 		}
 	}
-
-/*
-	//temporal := m.raiz
-	//INSERTA SI LA MATRIZ ESTA VACIA
-	//
-	//	m.raiz.siguiente = nuevoL
-	//	nuevoL.anterior = m.raiz
-	//	m.raiz.abajo = nuevoC
-	//	nuevoC.arriba = m.raiz
-	//	nuevoL.abajo = nuevo
-	//	nuevoC.siguiente = nuevo
-	//}
-	//fmt.Println(m.Buscar_letra(let))
-	//fmt.Println(m.Buscar_categoria(ria))
-*/
-
 }
 
-func (m *Matriz) buscar_Nodo(let string, ria string) *NodoM {
+func (m *Matriz) Buscar_Nodo(let string, ria string) *NodoM {
 	aux1 := m.raiz
 	aux2 := m.raiz
 	for aux2!= nil {
@@ -147,38 +147,10 @@ func (m *Matriz) buscar_Nodo(let string, ria string) *NodoM {
 		}else{
 			aux2 = aux2.abajo
 			aux1 = aux2
-			fmt.Println(" ")
+			//fmt.Println(" ")
 		}
 	}
 	return nil
-}
-
-func (m *Matriz) Print(){
-	aux1 := m.raiz
-	aux2 := m.raiz
-	for aux2!= nil {
-		fmt.Print( aux1.letra, "/",aux1.categoria,"-----------")
-		if aux1.siguiente!=nil {
-			aux1 = aux1.siguiente
-		}else{
-			aux2 = aux2.abajo
-			aux1 = aux2
-			fmt.Println(" ")
-		}
-	}
-	fmt.Println("----------------------------------------------------------------------")
-	aux1 = m.raiz
-	aux2 = m.raiz
-	for aux2!= nil {
-		fmt.Print( aux1.letra, "/",aux1.categoria,"-----------")
-		if aux1.abajo!=nil {
-			aux1 = aux1.abajo
-		}else{
-			aux2 = aux2.siguiente
-			aux1 = aux2
-			fmt.Println(" ")
-		}
-	}
 }
 
 func (m *Matriz) Insertar_nodo_letra(let string,cate string,nuevo *NodoM)  {
@@ -275,4 +247,60 @@ func (m *Matriz) Insertar_letra_categoria(let string, cate string, nuevo *NodoM)
 		auxc2.siguiente = nuevo
 		nuevo.anterior = auxc2
 	}
+}
+
+func (m *Matriz) Insertar_listas (letra string , categoria string ,calificacion int,nom string,desc string, tel string)  {
+	existe := m.Buscar_Nodo(letra, categoria)
+	if existe != nil{
+		existe.ll.Insert(calificacion,calificacion,nom,desc,tel)
+	}
+}
+
+func (m *Matriz) Devuelve_LL (letra string , categoria string )  *listadelistas.LL  {
+	existe := m.Buscar_Nodo(letra, categoria)
+	if existe != nil{
+		return m.Buscar_Nodo(letra,categoria).ll
+	}
+	return nil
+}
+
+func (m *Matriz) Print(){
+	aux1 := m.raiz
+	aux2 := m.raiz
+	for aux2!= nil {
+		fmt.Print( aux1.letra, "/",aux1.categoria,"-----------")
+		if aux1.siguiente!=nil {
+			aux1 = aux1.siguiente
+		}else{
+			aux2 = aux2.abajo
+			aux1 = aux2
+			fmt.Println(" ")
+		}
+	}
+	fmt.Println("----------------------------------------------------------------------")
+	aux1 = m.raiz
+	aux2 = m.raiz
+	for aux2!= nil {
+		fmt.Print( aux1.letra, "/",aux1.categoria,"-----------")
+		if aux1.abajo!=nil {
+			aux1 = aux1.abajo
+		}else{
+			aux2 = aux2.siguiente
+			aux1 = aux2
+			fmt.Println(" ")
+		}
+	}
+}
+
+func (m *Matriz) DotGraphviz(){
+	f, err :=os.Create("Matrix.dot")
+	if err !=nil{
+		fmt.Println(err)
+	}
+	fmt.Fprintln(f,"digraph G {\n    node[style=\"filled\",shape= \"box\"]\n    graph[splines = \"ortho\"]\n}")
+	f.Close()
+}
+
+func (m * Matriz) Arregllo()  {
+
 }

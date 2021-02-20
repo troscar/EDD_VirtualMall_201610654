@@ -14,18 +14,18 @@ import (
 //ll.Print()
 
 
-type nodo struct {
+type nodoLL struct {
 	lst *lista.Lst
-	siguiente, anterior *nodo
+	siguiente, anterior *nodoLL
 	index int
 }
 
-func newNodo(index int) *nodo {
-	return &nodo{lista.NewLst(), nil, nil, index}
+func newNodo(index int) *nodoLL {
+	return &nodoLL{lista.NewLst(), nil, nil, index}
 }
 
 type LL struct{
-	raiz, ultimo *nodo
+	raiz, ultimo *nodoLL
 	size int
 }
 
@@ -65,4 +65,16 @@ func (ll *LL) Print(){
 		aux.lst.Print()
 		aux = aux.siguiente
 	}
+}
+
+func (ll *LL) Devolver_nodo_llista(index int)  *lista.Lst{
+	aux := ll.raiz
+	for aux!= nil {
+		//fmt.Println("--------lista:", aux.index, "---------")
+		if aux.index == index{
+			return aux.lst
+		}
+		aux = aux.siguiente
+	}
+	return nil
 }

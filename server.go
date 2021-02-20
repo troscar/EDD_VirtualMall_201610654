@@ -46,6 +46,7 @@ func settodopost(w http.ResponseWriter,r *http.Request)  {
 	var request Sobre
 	json.Unmarshal(body,&request)
 	fmt.Println(request)
+	json.NewEncoder(w).Encode(request)
 	fmt.Fprintf(w,"OK")
 }
 
