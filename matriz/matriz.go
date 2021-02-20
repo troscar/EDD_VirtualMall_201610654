@@ -107,6 +107,14 @@ func (m *Matriz) Insert(let string, ria string){
 	}else if nuevoL==nil && nuevoC!=nil{
 		m.Insertar_letra(let)
 		m.Insertar_nodo_categoria(let,ria,nuevo)
+	}else if nuevoL!=nil && nuevoC!=nil{
+		existe := m.buscar_Nodo(let, ria)
+		if existe== nil {
+			fmt.Println("no existe")
+			m.Insertar_letra_categoria(let,ria,nuevo)
+		}else{
+			fmt.Println("ya existe")
+		}
 	}
 
 /*
@@ -125,6 +133,26 @@ func (m *Matriz) Insert(let string, ria string){
 */
 
 }
+
+func (m *Matriz) buscar_Nodo(let string, ria string) *NodoM {
+	aux1 := m.raiz
+	aux2 := m.raiz
+	for aux2!= nil {
+		//fmt.Print( aux1.letra, "/",aux1.categoria,"-----------")
+		if aux1.letra == let && aux1.categoria==ria{
+			return aux1
+		}
+		if aux1.siguiente!=nil {
+			aux1 = aux1.siguiente
+		}else{
+			aux2 = aux2.abajo
+			aux1 = aux2
+			fmt.Println(" ")
+		}
+	}
+	return nil
+}
+
 func (m *Matriz) Print(){
 	aux1 := m.raiz
 	aux2 := m.raiz
@@ -203,5 +231,48 @@ func (m *Matriz) Insertar_nodo_categoria(let string, ria string, nuevo *NodoM) {
 		aux2.siguiente = nuevo
 		letra.abajo = nuevo
 		nuevo.arriba = letra
+	}
+}
+
+func (m *Matriz) Insertar_letra_categoria(let string, cate string, nuevo *NodoM) {
+	auxl := m.Buscar_letra(let)
+	auxl2 := auxl
+	auxl = auxl.abajo
+	for auxl !=nil{
+		if auxl.categoria > cate{
+			break
+		}
+		auxl = auxl.abajo
+		auxl2 = auxl2.abajo
+	}
+	if auxl != nil{
+		nuevo.abajo = auxl
+		auxl2.abajo = nuevo
+		auxl.arriba  = nuevo
+		nuevo.arriba = auxl2
+	}else {
+		auxl2.abajo = nuevo
+		nuevo.arriba = auxl2
+	}
+
+
+	auxc := m.Buscar_categoria(cate)
+	auxc2 := auxc
+	auxc = auxc.siguiente
+	for auxc != nil{
+		if auxc.letra > let{
+			break
+		}
+		auxc = auxc.siguiente
+		auxc2 = auxc2.siguiente
+	}
+	if auxl != nil{
+		nuevo.siguiente = auxc
+		auxc2.siguiente = nuevo
+		auxc.anterior = nuevo
+		nuevo.anterior = auxc2
+	}else {
+		auxc2.siguiente = nuevo
+		nuevo.anterior = auxc2
 	}
 }

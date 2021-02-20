@@ -10,7 +10,7 @@ func main() {
 	mm.Insert("E","garage")
 	mm.Insert("C","deporte")
 	mm.Insert("F","deporte")
+	mm.Insert("F","jardin")
+	mm.Insert("C","garage")
 	mm.Print()
-
-
 }
