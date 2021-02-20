@@ -1,0 +1,66 @@
+digraph G {
+    node[style="filled",shape= "record"]
+    graph[splines = "ortho"]
+
+ node1[label=" <f0> 0 |  <f1> 1 |  <f2> 2 |  <f3> 3 |  <f4> 4 |  <f5> 5 |  <f6> 6 |  <f7> 7 |  <f8> 8 |  <f9> 9 |  <f10> 10 |  <f11> 11 |  <f12> 12 |  <f13> 13 |  <f14> 14 |  <f15> 15 |  <f16> 16 |  <f17> 17 |  <f18> 18 |  <f19> 19 |  <f20> 20 |  <f21> 21 |  <f22> 22 |  <f23> 23 |  <f24> 24 |  <f25> 25 |  <f26> 26 |  <f27> 27 |  <f28> 28 |  <f29> 29"]
+nodo0l0[label="root1"]
+node1:f0 -> nodo0l0
+nodo1l0[label="root2"]
+node1:f1 -> nodo1l0
+nodo2l0[label="root3"]
+node1:f2 -> nodo2l0
+nodo3l0[label="root4"]
+node1:f3 -> nodo3l0
+nodo4l0[label="root5"]
+node1:f4 -> nodo4l0
+nodo5l0[label="root1"]
+node1:f5 -> nodo5l0
+nodo6l0[label="root2"]
+node1:f6 -> nodo6l0
+nodo7l0[label="root3"]
+node1:f7 -> nodo7l0
+nodo8l0[label="root4"]
+node1:f8 -> nodo8l0
+nodo9l0[label="root5"]
+node1:f9 -> nodo9l0
+nodo10l0[label="root1"]
+node1:f10 -> nodo10l0
+nodo11l0[label="root2"]
+node1:f11 -> nodo11l0
+nodo12l0[label="root3"]
+node1:f12 -> nodo12l0
+nodo13l0[label="root4"]
+node1:f13 -> nodo13l0
+nodo14l0[label="root5"]
+node1:f14 -> nodo14l0
+nodo15l0[label="root1"]
+node1:f15 -> nodo15l0
+nodo16l0[label="root2"]
+node1:f16 -> nodo16l0
+nodo17l0[label="root3"]
+node1:f17 -> nodo17l0
+nodo18l0[label="root4"]
+node1:f18 -> nodo18l0
+nodo19l0[label="root5"]
+node1:f19 -> nodo19l0
+nodo20l0[label="root1"]
+node1:f20 -> nodo20l0
+nodo21l0[label="root2"]
+node1:f21 -> nodo21l0
+nodo22l0[label="root3"]
+node1:f22 -> nodo22l0
+nodo23l0[label="root4"]
+node1:f23 -> nodo23l0
+nodo24l0[label="root5"]
+node1:f24 -> nodo24l0
+nodo25l0[label="root1"]
+node1:f25 -> nodo25l0
+nodo26l0[label="root2"]
+node1:f26 -> nodo26l0
+nodo27l0[label="root3"]
+node1:f27 -> nodo27l0
+nodo28l0[label="root4"]
+node1:f28 -> nodo28l0
+nodo29l0[label="root5"]
+node1:f29 -> nodo29l0
+}

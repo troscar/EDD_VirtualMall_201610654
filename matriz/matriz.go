@@ -3,7 +3,9 @@ package matriz
 import (
 	"../listlist"
 	"fmt"
+	"io/ioutil"
 	"os"
+	"os/exec"
 )
 
 type NodoM struct {
@@ -23,11 +25,11 @@ func NewNodom(l, cate string) *NodoM {
 
 func iniciar_lista() *listadelistas.LL  {
 	ll := listadelistas.NewLL()
-	ll.Insert(1,1,"","","")
-	ll.Insert(2,2,"","","")
-	ll.Insert(3,3,"","","")
-	ll.Insert(4,4,"","","")
-	ll.Insert(5,5,"","","")
+	ll.Insert(1,1,"root1","","")
+	ll.Insert(2,2,"root2","","")
+	ll.Insert(3,3,"root3","","")
+	ll.Insert(4,4,"root4","","")
+	ll.Insert(5,5,"root5","","")
 	return ll
 
 }
@@ -238,7 +240,7 @@ func (m *Matriz) Insertar_letra_categoria(let string, cate string, nuevo *NodoM)
 		auxc = auxc.siguiente
 		auxc2 = auxc2.siguiente
 	}
-	if auxl != nil{
+	if auxc != nil{
 		nuevo.siguiente = auxc
 		auxc2.siguiente = nuevo
 		auxc.anterior = nuevo
@@ -293,14 +295,56 @@ func (m *Matriz) Print(){
 }
 
 func (m *Matriz) DotGraphviz(){
-	f, err :=os.Create("Matrix.dot")
+	//ESCRIBIMOS EL ARCHIVO DOT
+	f, err :=os.Create("C:\\Users\\tracs\\Desktop\\Go\\PROYECTO\\graphviz\\Matrix.dot")
 	if err !=nil{
 		fmt.Println(err)
 	}
-	fmt.Fprintln(f,"digraph G {\n    node[style=\"filled\",shape= \"box\"]\n    graph[splines = \"ortho\"]\n}")
+	cuerpo := "digraph G {\n    node[style=\"filled\",shape= \"box\"]\n    graph[splines = \"ortho\"]\n"
+
+
+	////AQUI VAN LOS NODOS DE LA MATRIZ
+
+
+	///TERMINA EL ARCHIVO DOT
+	cuerpo = cuerpo + "}"
+	fmt.Fprintln(f,cuerpo)
 	f.Close()
+
+	//PASAR DE .DOT A PNG
+	path, _ := exec.LookPath("dot")
+	cmd, _ := exec.Command(path, "-Tpng", "C:\\Users\\tracs\\Desktop\\Go\\PROYECTO\\graphviz\\Matrix.dot").Output()
+	mode := int(0777)
+	ioutil.WriteFile("C:\\Users\\tracs\\Desktop\\Go\\PROYECTO\\graphviz\\Matrix.png", cmd, os.FileMode(mode))
 }
 
-func (m * Matriz) Arregllo()  {
+func (m * Matriz) Arregllo() *listadelistas.LL {
+	ll := listadelistas.NewLL()
+	//var auxll *listadelistas.LL
+	//auxll = listadelistas.NewLL()
+	constante := 0
+	if m.raiz.siguiente!=nil && m.raiz.abajo!=nil{
+		cabezal_l := m.raiz.siguiente
+		aux1 := cabezal_l.abajo
+		for cabezal_l!= nil {
+			for i:=1;i <= 5;i++{
+				auxll := m.Devuelve_LL(aux1.letra,aux1.categoria)
+				auxnodoll := auxll.Devolver_nodo_llista(i)
+				ll.InsertNodoLL(auxnodoll,constante)
+				constante++
+			}
+			//fmt.Print( aux1.letra, "/",aux1.categoria,"-----------")
+			if aux1.abajo!=nil {
+				aux1 = aux1.abajo
+			}else{
+				cabezal_l = cabezal_l.siguiente
+				if cabezal_l!=nil{
+					aux1 = cabezal_l.abajo
+				}
 
+				//fmt.Println(" ")
+			}
+		}
+	}
+	return ll
 }
