@@ -25,11 +25,11 @@ func NewNodom(l, cate string) *NodoM {
 
 func iniciar_lista() *listadelistas.LL  {
 	ll := listadelistas.NewLL()
-	ll.Insert(1,1,"root1","","")
-	ll.Insert(2,2,"root2","","")
-	ll.Insert(3,3,"root3","","")
-	ll.Insert(4,4,"root4","","")
-	ll.Insert(5,5,"root5","","")
+	ll.Insert(1,1,"","","","","")
+	ll.Insert(2,2,"","","","","")
+	ll.Insert(3,3,"","","","","")
+	ll.Insert(4,4,"","","","","")
+	ll.Insert(5,5,"","","","","")
 	return ll
 
 }
@@ -254,7 +254,7 @@ func (m *Matriz) Insertar_letra_categoria(let string, cate string, nuevo *NodoM)
 func (m *Matriz) Insertar_listas (letra string , categoria string ,calificacion int,nom string,desc string, tel string)  {
 	existe := m.Buscar_Nodo(letra, categoria)
 	if existe != nil{
-		existe.ll.Insert(calificacion,calificacion,nom,desc,tel)
+		existe.ll.Insert(calificacion,calificacion,nom,desc,tel,letra,categoria)
 	}
 }
 

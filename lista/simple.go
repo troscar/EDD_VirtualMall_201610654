@@ -8,7 +8,7 @@ import (
 type nodoL struct {
 	siguiente, anterior *nodoL
 	calificacion , indice int
-	nombre , descripcion, telefono string
+	nombre , descripcion, telefono ,letra, categoria string
 }
 
 type Lst struct {
@@ -20,8 +20,8 @@ func NewLst() *Lst {
 	return &Lst{nil,nil,0}
 }
 
-func (m *Lst)Insert(cali int,nom string,desc string, tel string) int {
-	nuevo := &nodoL{nil,nil,cali,m.size,nom,desc,tel}
+func (m *Lst)Insert(cali int,nom string,desc string, tel string, let string , cate string) int {
+	nuevo := &nodoL{nil,nil,cali,m.size,nom,desc,tel,let,cate}
 	if m.raiz==nil {
 		m.raiz = nuevo
 		m.ultimo = nuevo
@@ -62,11 +62,26 @@ func (m *Lst)Graph(n int) string  {
 	return lista
 }
 
-func (m *Lst) Devuelve_nodo_lista(index int) *nodoL {
+type Tienda struct {
+	Nombre string
+	Descripcion string
+	Contacto string
+	Calificacion int
+}
+
+func (m *Lst) Devuelve_arreglo(l *Lst) []Tienda {
 	aux := m.raiz
+	cont := 0
 	for(aux != nil){
-		return aux
+		cont ++
 		aux = aux.siguiente
 	}
-	return nil
+	var list []Tienda
+	for(aux != nil){
+		fmt.Println(strconv.Itoa(aux.indice) +" "+aux.nombre)
+		nodito := Tienda{aux.nombre,aux.descripcion,aux.telefono,aux.calificacion}
+		list = append(list,nodito)
+		aux = aux.siguiente
+	}
+	return list
 }

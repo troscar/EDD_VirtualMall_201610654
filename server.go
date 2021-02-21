@@ -1,20 +1,18 @@
 package main
 
 import (
+	"./matriz"
 	"encoding/json"
 	"fmt"
 	"github.com/gorilla/mux"
 	"io/ioutil"
 	"log"
 	"net/http"
-	"./matriz"
-	"./lista"
-	"./listlist"
-	"strconv"
+	"os"
 )
 
-var L = lista.NewLst()
-var Ll = listadelistas.NewLL()
+//var L = lista.NewLst()
+//var Ll = listadelistas.NewLL()
 var Mm = matriz.NewMatriz()
 var sobre archivo
 
@@ -56,8 +54,8 @@ func homepage(w http.ResponseWriter,r *http.Request)  {
 }
 
 func getArreglo(w http.ResponseWriter,r *http.Request)  {
-	Mm.DotGraphviz()
-
+	arre := Mm.Arregllo()
+	arre.DotGraphviz()
 }
 
 func cargartienda(w http.ResponseWriter,r *http.Request)  {
@@ -75,25 +73,23 @@ func cargartienda(w http.ResponseWriter,r *http.Request)  {
 			Mm.Insert(letra,departamento)
 			Tiendas := Departamentos[j].Tiendas
 			if len(Tiendas)!= 0 {
-				fmt.Println("SI HAY TIENDAS")
+				//fmt.Println("SI HAY TIENDAS")
 				for k := 0; k < len(Tiendas); k++  {
 					Calificacion := Tiendas[k].Calificacion
 					Nombre := Tiendas[k].Nombre
 					Descripcion := Tiendas[k].Descripcion
 					Contacto := Tiendas[k].Contacto
-					fmt.Println("Tienda: "+Nombre+", Calificacion"+strconv.Itoa(Calificacion)+". Contacto: "+Contacto+", Depa: "+departamento+", Letra: "+letra+"\n Descripcion: "+Descripcion+"\n")
-
+					//fmt.Println("Tienda: "+Nombre+", Calificacion"+strconv.Itoa(Calificacion)+". Contacto: "+Contacto+", Depa: "+departamento+", Letra: "+letra+"\n Descripcion: "+Descripcion+"\n")
+					Mm.Insertar_listas(letra,departamento,Calificacion,Nombre,Descripcion,Contacto)
 				}
 			}else{
-				fmt.Println("NO HAY TIENDAS")
+				//fmt.Println("NO HAY TIENDAS")
 			}
-
-
 		}
 	}
-	Mm.Print()
-	arre := Mm.Arregllo()
-	arre.DotGraphviz()
+	//Mm.Print()
+	//arre := Mm.Arregllo()
+	//arre.DotGraphviz()
 }
 
 func TiendaEspecifica(w http.ResponseWriter,r *http.Request)  {
@@ -108,8 +104,31 @@ func request(){
 	myrouter := mux.NewRouter().StrictSlash(true)
 	myrouter.HandleFunc("/",homepage)
 	myrouter.HandleFunc("/getArreglo",getArreglo).Methods("GET")
+	myrouter.HandleFunc("/id/0",getid).Methods("GET")
+	myrouter.HandleFunc("/guardarjson",getguardar).Methods("GET")
 	myrouter.HandleFunc("/cargartienda",cargartienda).Methods("POST")
 	myrouter.HandleFunc("/TiendaEspecifica",TiendaEspecifica).Methods("POST")
 	log.Fatal(http.ListenAndServe(":3000",myrouter))
 
+}
+
+func getguardar(writer http.ResponseWriter, h *http.Request) {
+	crear_json, _ := json.Marshal(sobre)
+	convertir_a_cadena := string(crear_json)
+	fmt.Println(convertir_a_cadena)
+	f, err :=os.Create("C:\\Users\\tracs\\Desktop\\Go\\PROYECTO\\graphviz\\practica.json")
+	if err !=nil{
+		fmt.Println(err)
+	}
+	fmt.Fprintln(f,convertir_a_cadena)
+}
+
+func getid(writer http.ResponseWriter, h *http.Request) {
+	arre := Mm.Arregllo()
+	listado := arre.Devolver_lista(5)
+	lista := listado.Devuelve_arreglo(listado)
+	crear_json, _ := json.Marshal(lista)
+	convertir_a_cadena := string(crear_json)
+	fmt.Println(lista)
+	fmt.Fprintln(writer,convertir_a_cadena)
 }

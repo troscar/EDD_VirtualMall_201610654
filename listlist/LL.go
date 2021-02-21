@@ -38,22 +38,22 @@ func NewLL() *LL {
 }
 
 
-func (ll *LL) Insert(index int,cali int,nom string,desc string, tel string)  {
+func (ll *LL) Insert(index int,cali int,nom string,desc string, tel string,let string,cate string)  {
 	nuevo := newNodo(index)
 	if ll.raiz == nil{
 		ll.raiz = nuevo
 		ll.ultimo = nuevo
-		nuevo.lst.Insert(cali ,nom ,desc , tel )
+		nuevo.lst.Insert(cali ,nom ,desc , tel ,let,cate)
 	}else{
 		aux := ll.raiz
 		for(aux!=nil){
 			if aux.index==index{
-				aux.lst.Insert(cali ,nom ,desc , tel )
+				aux.lst.Insert(cali ,nom ,desc , tel ,let,cate)
 				return
 			}
 			aux = aux.siguiente
 		}
-		nuevo.lst.Insert(cali ,nom ,desc , tel )
+		nuevo.lst.Insert(cali ,nom ,desc , tel ,let,cate)
 		ll.ultimo.siguiente = nuevo
 		nuevo.anterior= ll.ultimo
 		ll.ultimo = nuevo
